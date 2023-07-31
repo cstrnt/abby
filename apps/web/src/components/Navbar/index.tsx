@@ -64,7 +64,7 @@ const NAV_ITEMS: Array<NavItem> = [
     subItems: [
       {
         title: "A/B Testing Generator",
-        href: "/ab-testing-generator",
+        href: "/a-b-testing-generator",
         subTitle: "Generate A/B Tests using AI",
       },
     ],
