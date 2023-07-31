@@ -11,7 +11,7 @@ const configuration = new Configuration({
 const openai = new OpenAIApi(configuration);
 
 const incomingSchema = z.object({
-  text: z.string().max(56),
+  text: z.string().max(256),
   count: z.number().min(1).max(5),
   target: z.nativeEnum(ABGeneratorTarget),
 });
@@ -83,13 +83,14 @@ export default async function abTestingGenerator(
         }
 
         const { text, count, target } = incomingSchema.parse(req.body);
+
         const response = await openai.createChatCompletion({
           model: "gpt-3.5-turbo",
           messages: [
             {
               role: "system",
               content:
-                "you are an a/b testing assistant. you help users to find alternative text for their current text to test in their a/b testing suite. Only return the data in a json object where the keys of the object are uppercase letters of the alphabet",
+                "you are an a/b testing assistant. you help users to find alternative text for their current text to test in their a/b testing suite. Only return the data in a json object where the keys of the object are uppercase letters of the alphabet. The values should have normal case",
             },
             {
               role: "user",

@@ -60,6 +60,16 @@ const NAV_ITEMS: Array<NavItem> = [
     ],
   },
   {
+    title: "Tools",
+    subItems: [
+      {
+        title: "A/B Testing Generator",
+        href: "/ab-testing-generator",
+        subTitle: "Generate A/B Tests using AI",
+      },
+    ],
+  },
+  {
     title: "Learn More",
     subItems: [
       {
