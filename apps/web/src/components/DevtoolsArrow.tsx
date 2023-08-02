@@ -4,7 +4,7 @@ import { CornerRightDown } from "lucide-react";
 import { usePlausible } from "next-plausible";
 import { useState, useEffect } from "react";
 
-const DEVTOOLS_ID = "devtools-collapsed";
+const DEVTOOLS_ID = "abby-devtools-collapsed";
 
 export function useDevtoolsPosition() {
   const [devtoolsPosition, setDevtoolsPosition] = useState<DOMRect | null>(
