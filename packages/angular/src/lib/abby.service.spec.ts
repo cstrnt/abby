@@ -5,6 +5,7 @@ import { AbbyModule } from "./abby.module";
 
 import { Component, Injectable } from "@angular/core";
 import { TestStorageService } from "./StorageService";
+import type { AbbyConfig } from "@tryabby/core";
 import { zip } from "rxjs";
 import { Routes } from "@angular/router";
 import { AbbyFlag } from "./flag.directive";
@@ -12,6 +13,7 @@ import { AbbyFlag } from "./flag.directive";
 const mockConfig = {
   projectId: "mock-project-id",
   currentEnvironment: "test",
+  environments: ["test", "production"],
   tests: {
     test: {
       variants: ["A", "B", "C", "D"],
@@ -41,7 +43,7 @@ const mockConfig = {
       },
     },
   },
-} as const;
+} satisfies AbbyConfig;
 
 const mockedData = {
   tests: [
@@ -85,16 +87,19 @@ export class Abby extends AbbyService<
 > {}
 
 describe("AbbyService", () => {
-  let service: AbbyService;
+  let service: Abby;
   let fixture: ComponentFixture<TestComponent>;
 
   @Component({
     template: `
-      <div *featureFlag="'flag1'">
+      <div *abbyFlag="'flag1'">
         <h1>Flag 1</h1>
       </div>
-      <div *featureFlag="'flag2'">
+      <div *abbyFlag="'flag2'">
         <h1>Flag 2</h1>
+      </div>
+      <div *abbyFlag="dynamicFlag">
+        <h4>Dynamic Flag</h4>
       </div>
       <div *abbyTest="{ testName: 'test2', variant: 'A' }">
         <h2>A</h2>
@@ -104,7 +109,9 @@ describe("AbbyService", () => {
       </div>
     `,
   })
-  class TestComponent {}
+  class TestComponent {
+    dynamicFlag = 'flag1';
+  }
 
   beforeAll(async () => {
     const fetchSpy = spyOn(window, "fetch");
@@ -128,8 +135,6 @@ describe("AbbyService", () => {
     service = TestBed.inject(AbbyService);
   });
 
-  beforeEach(() => {});
-
   it("should be created", () => {
     expect(service).toBeTruthy();
   });
@@ -150,7 +155,13 @@ describe("AbbyService", () => {
     });
   });
 
-  fit("should respect the default values for feature flags", () => {
+  it("uses lookup object when getting variant", () => {
+    service.getVariant("test2", { A: 1, B: 2 }).subscribe((value) => {
+      expect(value).toEqual(1);
+    });
+  });
+
+  it("should respect the default values for feature flags", () => {
     service.getFeatureFlagValue("defaultFlag").subscribe((value) => {
       expect(value).toEqual(false);
     });
@@ -265,5 +276,11 @@ describe("AbbyService", () => {
     if (testAElement) {
       expect(testAElement.textContent).toEqual("A");
     } else fail("querySelector is null");
+  });
+
+  it('evaluates flag directives with property bound values', () => {
+    const compiled = fixture.nativeElement as HTMLElement;
+    let flagElement = compiled.querySelector("h4");
+    expect(flagElement?.textContent).toEqual('Dynamic Flag');
   });
 });

@@ -12,8 +12,7 @@ import { LoadingSpinner } from "components/LoadingSpinner";
 import { BrowserWindow } from "components/BrowserWindow";
 import { useRef } from "react";
 import { cn } from "lib/utils";
-import { usePlausible } from "next-plausible";
-import { TrackingEvent } from "lib/tracking";
+import { useTracking } from "lib/tracking";
 
 export enum ABGeneratorTarget {
   CTAButton = "CTA Button",
@@ -26,7 +25,7 @@ export const MAX_TRIES = 5;
 const QUERY_KEY = "ab-testing-generator";
 
 const ABTestingGeneratorPage: NextPageWithLayout = () => {
-  const plausible = usePlausible();
+  const trackEvent = useTracking();
   const targetRef = useRef<HTMLSelectElement>(null);
   const queryClient = useQueryClient();
   const { data } = useQuery([QUERY_KEY], () =>
@@ -59,7 +58,7 @@ const ABTestingGeneratorPage: NextPageWithLayout = () => {
       count: Number(formData.get("count")),
       target: formData.get("target") as ABGeneratorTarget,
     };
-    plausible(TrackingEvent.AB_TESTING_GENERATOR, {
+    trackEvent("AB Testing Generator Used", {
       props: {
         target: data.target,
         count: data.count,

@@ -1,5 +1,23 @@
 # web
 
+## 0.2.27
+
+### Patch Changes
+
+- Updated dependencies
+  - @tryabby/core@4.2.0
+  - @tryabby/next@4.1.1
+  - @tryabby/devtools@4.1.0
+
+## 0.2.26
+
+### Patch Changes
+
+- Updated dependencies
+  - @tryabby/devtools@4.1.0
+  - @tryabby/core@4.1.0
+  - @tryabby/next@4.1.0
+
 ## 0.2.25
 
 ### Patch Changes

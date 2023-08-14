@@ -3,6 +3,7 @@ import {
   ABConfig,
   createAbby as baseCreateAbby,
   withDevtoolsFunction,
+  ABTestReturnValue,
 } from "@tryabby/react";
 import { AbbyDataResponse, FlagValueString, getABStorageKey } from "@tryabby/core";
 import type { F } from "ts-toolbelt";
@@ -13,12 +14,14 @@ import Cookie from "js-cookie";
 import type { NextApiHandler, NextApiRequest, NextApiResponse } from "next";
 import { getIsomorphicCookies, isBrowser, isEdgeFunction } from "./helpers";
 
+export { defineConfig } from "@tryabby/core";
+
 // TODO: figure out how to prevent re-typing of the same types
 export function createAbby<
   FlagName extends string,
   TestName extends string,
   Tests extends Record<TestName, ABConfig>,
-  Flags extends Record<FlagName, FlagValueString> = Record<FlagName, FlagValueString>
+  Flags extends Record<FlagName, FlagValueString> = Record<FlagName, FlagValueString>,
 >(config: F.Narrow<AbbyConfig<FlagName, Tests, Flags>>) {
   const {
     AbbyProvider,
@@ -46,7 +49,21 @@ export function createAbby<
 
   return {
     AbbyProvider,
-    useAbby,
+    // we need to retype the useAbby function here
+    // because re-using the types from the react package causes the ts-toolbelt package to behave weirdly
+    // and therefore not working as expected
+    useAbby: useAbby as <
+      K extends keyof Tests,
+      TestVariant extends Tests[K]["variants"][number],
+      LookupValue,
+      Lookup extends Record<TestVariant, LookupValue> | undefined = undefined,
+    >(
+      name: K,
+      lookupObject?: F.Narrow<Lookup>
+    ) => {
+      variant: ABTestReturnValue<Lookup, TestVariant>;
+      onAct: () => void;
+    },
     useFeatureFlag,
     withAbby: withAbby(config as AbbyConfig<FlagName, Tests>, __abby__),
     getFeatureFlagValue,
@@ -65,18 +82,26 @@ export function createAbby<
      */
     getABTestValue<
       T extends keyof Tests,
+      TestVariant extends Tests[T]["variants"][number],
+      LookupValue,
+      Lookup extends Record<TestVariant, LookupValue> | undefined = undefined,
       RequestType extends NextRequest | NextApiRequest | undefined = undefined,
       ResponseType extends NextResponse | NextApiResponse = RequestType extends NextRequest
         ? NextResponse
         : RequestType extends NextApiRequest
         ? NextApiResponse
-        : never
+        : never,
     >(
       name: T,
-      req?: RequestType
+      req?: RequestType,
+      lookupObject?: F.Narrow<Lookup>
     ): [
-      Tests[T]["variants"][number],
-      RequestType extends NextRequest | NextApiRequest ? (res: ResponseType) => void : () => void
+      Lookup extends undefined
+        ? TestVariant
+        : TestVariant extends keyof Lookup
+        ? Lookup[TestVariant]
+        : never,
+      RequestType extends NextRequest | NextApiRequest ? (res: ResponseType) => void : () => void,
     ] {
       const cookies = getIsomorphicCookies(req);
 
@@ -85,7 +110,12 @@ export function createAbby<
       const cookieKey = getABStorageKey(config.projectId, name as string);
 
       if (storedValue) {
-        return [typeof storedValue === "string" ? storedValue : storedValue.value, () => {}];
+        const storedVariant = typeof storedValue === "string" ? storedValue : storedValue.value;
+
+        return [
+          lookupObject ? lookupObject[storedVariant as keyof typeof lookupObject] : storedVariant,
+          () => {},
+        ];
       }
 
       const newValue = __abby__.getTestVariant(name);
@@ -111,7 +141,10 @@ export function createAbby<
         res.setHeader("Set-Cookie", `${cookieKey}=${newValue};`);
       };
 
-      return [newValue, setCookieFunc];
+      return [
+        lookupObject ? (lookupObject[newValue as keyof typeof lookupObject] as any) : newValue,
+        setCookieFunc,
+      ];
     },
     /**
      * Isomorphic function to reset the value of an A/B test
@@ -126,7 +159,7 @@ export function createAbby<
         ? NextResponse
         : RequestType extends NextApiRequest
         ? NextApiResponse
-        : never
+        : never,
     >(
       name: T,
       req?: RequestType
