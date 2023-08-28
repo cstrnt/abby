@@ -8,6 +8,7 @@ import { env } from "../../../env/server.mjs";
 import { prisma } from "../../../server/db/client";
 import { trackSignup } from "lib/logsnag";
 import { ProjectService } from "../../../server/services/ProjectService";
+import { sendWelcomeEmail } from "../../../../emails";
 
 export const authOptions: NextAuthOptions = {
   pages: {
@@ -70,7 +71,13 @@ export const authOptions: NextAuthOptions = {
         userId: user.id,
         projectName: "My Project",
       });
-      await trackSignup();
+      await Promise.all([
+        trackSignup(),
+        // comment this line out if you want to test locally
+        process.env.NODE_ENV === "production" && user.email
+          ? sendWelcomeEmail(user.email)
+          : Promise.resolve(),
+      ]);
     },
   },
   // Configure one or more authentication providers

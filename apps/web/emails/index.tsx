@@ -6,6 +6,7 @@ import InviteEmail, { Props as InviteEmailProps } from "./invite";
 import ContactFormularEmail, {
   Props as ContactMailProps,
 } from "./ContactFormularEmail";
+import WelcomeEmail from "./Welcome";
 
 const transporter = createTransport({
   pool: true,
@@ -31,6 +32,16 @@ export function sendContactFormularEmail(props: ContactMailProps) {
     to: abbyContactAdress,
     from: `A/BBY <${env.ABBY_FROM_EMAIL}>`,
     subject: `New Message from ${props.name} ${props.surname}`,
+    html: email,
+  });
+}
+
+export function sendWelcomeEmail(toEmail: string) {
+  const email = render(<WelcomeEmail />);
+  return transporter.sendMail({
+    to: toEmail,
+    from: `Tim from A/BBY <tim@tryabby.com>`,
+    subject: `👋 Welcome to A/BBY!`,
     html: email,
   });
 }
