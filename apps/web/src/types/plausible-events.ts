@@ -28,4 +28,6 @@ export type PlausibleEvents = {
     target: string;
     count: number;
   };
+  "Dashboard Help Clicked": never;
+  "Dashboard Code Clicked": never;
 };
