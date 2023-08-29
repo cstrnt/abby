@@ -23,10 +23,12 @@ export type PlausibleEvents = {
   "Devtools Interaction": {
     type: "Flag Updated" | "Variant Selected";
   };
-  "API Project Data Retrieved": never;
   "AB Testing Generator Used": {
     target: string;
     count: number;
+  };
+  "API Project Data Retrieved": {
+    projectId: string;
   };
   "Dashboard Help Clicked": never;
   "Dashboard Code Clicked": never;
