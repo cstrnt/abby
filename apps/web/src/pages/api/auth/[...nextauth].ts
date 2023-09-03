@@ -13,6 +13,7 @@ import { sendWelcomeEmail } from "../../../../emails";
 export const authOptions: NextAuthOptions = {
   pages: {
     signIn: "/login",
+    newUser: "/welcome",
   },
   session: {
     strategy: "jwt",
@@ -26,6 +27,7 @@ export const authOptions: NextAuthOptions = {
           id: token.user.id,
           image: token.user.image,
           projectIds: token.user.projectIds,
+          hasCompletedOnboarding: token.user.hasCompletedOnboarding,
           lastOpenProjectId: session.user?.lastOpenProjectId
             ? session.user?.lastOpenProjectId
             : token.user.projectIds[0],
@@ -42,23 +44,33 @@ export const authOptions: NextAuthOptions = {
         if ("projectIds" in session) {
           token.user.projectIds = session.projectIds;
         }
+        if ("hasCompletedOnboarding" in session) {
+          token.user.hasCompletedOnboarding = session.hasCompletedOnboarding;
+        }
+        if ("name" in session) {
+          token.name = session.name;
+        }
       }
       if (user) {
-        const projects = await prisma.projectUser.findMany({
-          where: {
-            userId: user.id,
-          },
-          select: {
-            projectId: true,
+        const dbUser = await prisma.user.findUnique({
+          where: { id: user.id },
+          include: {
+            projects: {
+              select: { projectId: true },
+            },
           },
         });
+
         token.user = {
           ...(token.user ?? {}),
           id: user.id,
           image:
             user.image ??
             `https://avatars.dicebear.com/api/initials/${user?.email}.svg`,
-          projectIds: projects.map((project) => project.projectId),
+          hasCompletedOnboarding: dbUser?.hasCompletedOnboarding ?? false,
+          projectIds: (dbUser?.projects ?? []).map(
+            (project) => project.projectId
+          ),
         };
       }
 
