@@ -88,7 +88,12 @@ export const authOptions: NextAuthOptions = {
         // comment this line out if you want to test locally
         process.env.NODE_ENV === "production" && user.email
           ? sendWelcomeEmail(user.email)
-          : Promise.resolve(),
+          : () => {
+              console.log(
+                `Not sending welcome email: ${user.email} | ${process.env.NODE_ENV}`
+              );
+              return Promise.resolve();
+            },
       ]);
     },
   },
