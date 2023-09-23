@@ -11,6 +11,7 @@ import {
   NavigationMenuTrigger,
   navigationMenuTriggerStyle,
 } from "components/ui/navigation-menu";
+
 import { cn } from "lib/utils";
 import { ExternalLink, Star } from "lucide-react";
 import { useSession } from "next-auth/react";
@@ -133,7 +134,11 @@ function MobileNav() {
           <Menu.Item>
             {status === "authenticated" ? (
               <NavItem
-                href={`/projects/${data.user?.projectIds[0]}`}
+                href={`/projects${
+                  data.user?.lastOpenProjectId
+                    ? `/${data.user?.lastOpenProjectId}`
+                    : ""
+                }/flags`}
                 isProminent
                 className="mr-0"
               >
@@ -283,7 +288,7 @@ export function Navbar({ isInverted }: { isInverted?: boolean }) {
               userSession.user?.lastOpenProjectId
                 ? `/${userSession.user?.lastOpenProjectId}`
                 : ""
-            }`}
+            }/flags`}
             isProminent
             className="hidden lg:flex"
           >

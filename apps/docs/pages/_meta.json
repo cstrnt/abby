@@ -14,6 +14,7 @@
   },
   "a-b-testing": "A/B Tests",
   "feature-flags": "Feature Flags",
+  "remote-config": "Remote Configuration",
   "environments": "Environments",
   "config": "Configuration as Code",
   "-- More --": {
@@ -21,7 +22,7 @@
     "title": "More"
   },
   "abby_link": {
-    "title": "A/BBY ↗",
+    "title": "Abby ↗",
     "href": "https://www.tryabby.com",
     "newWindow": true
   }

@@ -33,7 +33,7 @@ To get started make sure to install the package using your favorite package mana
 
 ### Create your config
 
-To use A/BBY you need to create your config first. You can do this by creating a file called `abby.config.ts` in your `root` folder. This file will be used to configure your project.
+To use Abby you need to create your config first. You can do this by creating a file called `abby.config.ts` in your `root` folder. This file will be used to configure your project.
 
 ```ts
 // abby.config.ts
@@ -48,7 +48,10 @@ export default defineConfig({
     footer: { variants: ["dark", "orange", "green"] },
     // ... your tests
   },
-  flags: { darkMode: "Boolean", newFeature: "Boolean" },
+  flags: ["darkMode", "newFeature"],
+  remoteConfig: {
+    customButtonText: "String",
+  },
 });
 ```
 
@@ -61,7 +64,7 @@ Please copy the id of your project from the dashboard to get started.
 import { createAbby } from "@tryabby/react";
 import abbyConfig from "../abby.config";
 
-const { AbbyProvider, useAbby } = createAbby(abbyConfig);
+export const { AbbyProvider, useAbby, useFeatureFlag, useRemoteConfig } = createAbby(abbyConfig);
 ```
 
 ### Wrap your Application
@@ -103,26 +106,21 @@ function MyButton() {
 ```
 
 Optionally, you can pass a lookup object to automatically map the selected variant to a custom value.
+
 ```tsx
 import { useAbby } from "./abby";
 
 function MyButton() {
-  const { variant, onAct } = useAbby(
-    "footer",
-    {
-      dark: "bg-gray-900",
-      orange: "bg-orange-500",
-      green: "bg-green-500",
-    }
-  );
+  const { variant, onAct } = useAbby("footer", {
+    dark: "bg-gray-900",
+    orange: "bg-orange-500",
+    green: "bg-green-500",
+  });
 
   return (
     <main className="p-6">
       <h1>Abby Test Page:</h1>
-      <button
-        className={`rounded-lg py-2 px-4 text-white ${variant}`}
-        onClick={onAct}
-      >
+      <button className={`rounded-lg py-2 px-4 text-white ${variant}`} onClick={onAct}>
         Cool Button
       </button>
     </main>
@@ -145,6 +143,26 @@ function HomePage() {
       <h1>Welcome back, User</h1>
       {hasNewFeature && <p>Here is the new feature</p>}
       <p>This is our super boring page</p>
+    </main>
+  );
+}
+```
+
+### useRemoteConfig
+
+The `useRemoteConfig` hook returns a value as specified in your `abby.config.ts`.
+The type of the returned value will automatically be inferred from your config.
+
+```tsx
+import { useRemoteConfig } from "./abby";
+
+function HomePage() {
+  const customButtonText = useRemoteConfig("customButtonText");
+
+  return (
+    <main className="p-6">
+      <h1>Welcome back, User</h1>
+      <button>{customButtonText}</button>
     </main>
   );
 }

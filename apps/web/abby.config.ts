@@ -10,11 +10,12 @@ export default defineConfig({
     SignupButton: {
       variants: ["A", "B"],
     },
+    TipsAndTricks: {
+      variants: ["Blog"],
+    },
   },
-  flags: {
-    AdvancedTestStats: "Boolean",
-    showFooter: "Boolean",
-    test: "Boolean",
+  flags: ["AdvancedTestStats", "showFooter", "test"],
+  remoteConfig: {
     abc: "JSON",
   },
 });
