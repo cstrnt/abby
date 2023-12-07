@@ -1,16 +1,22 @@
 {
   "name": "@tryabby/next",
-  "version": "5.0.2",
+  "version": "5.0.4",
   "description": "",
   "main": "dist/index.js",
   "files": [
     "dist"
   ],
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  ".": {
+    "types": "./dist/index.d.ts",
+    "import": "./dist/index.mjs",
+    "require": "./dist/index.js"
+  },
   "scripts": {
     "build": "tsup src/index.tsx",
     "dev": "pnpm run build --watch",
-    "test": "vitest",
-    "prepare": "pnpm run build"
+    "test": "vitest"
   },
   "keywords": [],
   "author": "",

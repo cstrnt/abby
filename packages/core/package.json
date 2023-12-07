@@ -1,6 +1,6 @@
 {
   "name": "@tryabby/core",
-  "version": "5.1.0",
+  "version": "5.1.2",
   "description": "",
   "main": "dist/index.js",
   "files": [
@@ -26,8 +26,7 @@
   "scripts": {
     "build": "tsup src/",
     "dev": "pnpm run build --watch",
-    "test": "vitest",
-    "prepare": "pnpm run build"
+    "test": "vitest"
   },
   "keywords": [],
   "author": "",

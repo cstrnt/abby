@@ -10,6 +10,7 @@ import {
   getDefaultRemoteConfigValue,
   ABBY_RC_STORAGE_PREFIX,
   remoteConfigStringToType,
+  ABBY_WINDOW_KEY,
 } from "./shared/";
 import { HttpService } from "./shared";
 import { F } from "ts-toolbelt";
@@ -159,6 +160,17 @@ export class Abby<
   async loadProjectData() {
     this.log(`loadProjectData()`);
 
+    // browser environments can load the abby data from the window object
+    // when the script is loaded from the server
+    if (
+      typeof window !== "undefined" &&
+      ABBY_WINDOW_KEY in window &&
+      window[ABBY_WINDOW_KEY] != null
+    ) {
+      this.log(`loadProjectData() => using window data`);
+      return this.init(window[ABBY_WINDOW_KEY] as AbbyDataResponse);
+    }
+
     const data = await HttpService.getProjectData({
       projectId: this.config.projectId,
       environment: this.config.currentEnvironment as string,
@@ -168,7 +180,7 @@ export class Abby<
       this.log(`loadProjectData() => no data`);
       return;
     }
-    this.init(data);
+    return this.init(data);
   }
 
   async getProjectDataAsync(): Promise<LocalData<FlagName, TestName, RemoteConfigName>> {
