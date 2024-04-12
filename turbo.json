@@ -1,16 +1,5 @@
 {
   "$schema": "https://turbo.build/schema.json",
-  "globalDependencies": [
-    "$VERCEL_URL",
-    "$PORT",
-    "$NODE_ENV",
-    "$VERCEL",
-    "$VERCEL_ENV",
-    "$NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY",
-    "$OPENAI_API_KEY",
-    "$ANALYZE",
-    "$SKIP_ENV_VALIDATION"
-  ],
   "pipeline": {
     "build": {
       "dependsOn": ["^build"],
@@ -32,5 +21,16 @@
     "db:migrate": {
       "cache": false
     }
-  }
+  },
+  "globalEnv": [
+    "VERCEL_URL",
+    "OPENAI_API_KEY",
+    "PORT",
+    "NODE_ENV",
+    "VERCEL",
+    "VERCEL_ENV",
+    "NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY",
+    "ANALYZE",
+    "SKIP_ENV_VALIDATION"
+  ]
 }
