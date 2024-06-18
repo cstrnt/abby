@@ -2,7 +2,7 @@ import { Configuration, OpenAIApi } from "openai";
 import { NextApiRequest, NextApiResponse } from "next";
 import { z } from "zod";
 import { createHash } from "crypto";
-import { Redis } from "@upstash/redis";
+import { redis } from "server/db/redis";
 import { ABGeneratorTarget, MAX_TRIES } from "pages/a-b-testing-generator";
 
 const configuration = new Configuration({
@@ -56,9 +56,8 @@ export default async function abTestingGenerator(
           triesLeft: MAX_TRIES,
         });
       }
-      const redis = Redis.fromEnv();
       const hashedIp = getHashedIp(req);
-      const tries = await redis.get<number>(getRedisKey(hashedIp));
+      const tries = await redis.get(getRedisKey(hashedIp));
 
       res.json({
         triesLeft: MAX_TRIES - Number(tries || "0"),
@@ -73,7 +72,6 @@ export default async function abTestingGenerator(
         // we only want to rate limit in production
         if (process.env.NODE_ENV === "production") {
           const hashedIp = getHashedIp(req);
-          const redis = Redis.fromEnv();
           tries = await redis.incr(getRedisKey(hashedIp));
 
           if (tries > MAX_TRIES) {
