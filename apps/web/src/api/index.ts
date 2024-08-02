@@ -6,6 +6,7 @@ import { logger } from "hono/logger";
 import { makeHealthRoute } from "./routes/health";
 import { makeEventRoute } from "./routes/v1_event";
 import { makeLegacyProjectDataRoute } from "./routes/legacy_project_data";
+import { flagAiRoute } from "./routes/ee/v1_flag_ai";
 
 export const app = new Hono()
   .basePath("/api")
@@ -19,4 +20,6 @@ export const app = new Hono()
   // v1 routes
   .route("/v1/config", makeConfigRoute())
   .route("/v1/data", makeProjectDataRoute())
-  .route("/v1/track", makeEventRoute());
+  .route("/v1/track", makeEventRoute())
+  // Enterprise routes
+  .route("/ee/v1/abby-ai", flagAiRoute);

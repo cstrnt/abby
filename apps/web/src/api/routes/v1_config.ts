@@ -6,7 +6,7 @@ import * as ConfigService from "server/services/ConfigService";
 import { ApiKey } from "@prisma/client";
 import { abbyConfigSchema } from "@tryabby/core";
 
-const apiKeyMiddleware: MiddlewareHandler<{
+export const apiKeyMiddleware: MiddlewareHandler<{
   Variables: {
     apiKey: ApiKey;
   };
