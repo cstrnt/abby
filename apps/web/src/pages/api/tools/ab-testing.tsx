@@ -1,14 +1,13 @@
-import { Configuration, OpenAIApi } from "openai";
+import { OpenAI } from "openai";
 import { NextApiRequest, NextApiResponse } from "next";
 import { z } from "zod";
 import { createHash } from "crypto";
 import { redis } from "server/db/redis";
 import { ABGeneratorTarget, MAX_TRIES } from "pages/a-b-testing-generator";
 
-const configuration = new Configuration({
+const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
-const openai = new OpenAIApi(configuration);
 
 const incomingSchema = z.object({
   text: z.string().max(256),
@@ -82,8 +81,8 @@ export default async function abTestingGenerator(
 
         const { text, count, target } = incomingSchema.parse(req.body);
 
-        const response = await openai.createChatCompletion({
-          model: "gpt-3.5-turbo",
+        const response = await openai.chat.completions.create({
+          model: "gpt-4o-mini",
           messages: [
             {
               role: "system",
@@ -102,7 +101,7 @@ export default async function abTestingGenerator(
           presence_penalty: 0,
         });
 
-        const responseMessage = response.data.choices[0]?.message?.content;
+        const responseMessage = response.choices[0]?.message?.content;
 
         if (!responseMessage) {
           throw new Error("Could not generate response");
