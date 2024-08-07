@@ -1,4 +1,4 @@
-import { OpenAI } from "openai";
+import type { OpenAI } from "openai";
 
 export class AIFlagRemovalService {
   constructor(private openai: OpenAI) {}

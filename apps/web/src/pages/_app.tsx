@@ -62,7 +62,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
                 <PlausibleProvider
                   domain={env.NEXT_PUBLIC_PLAUSIBLE_DOMAIN ?? ""}
                 >
-                  <main className={`font-sans`}>
+                  <main className={"font-sans"}>
                     <DefaultSeo
                       defaultTitle="Abby - Open Source A/B Testing & Feature Flags"
                       titleTemplate="%s"

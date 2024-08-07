@@ -4,6 +4,7 @@ import { createTransport } from "nodemailer";
 import ContactFormularEmail, {
   type Props as ContactMailProps,
 } from "./ContactFormularEmail";
+import WelcomeMail from "./Welcome";
 import InviteEmail, { type Props as InviteEmailProps } from "./invite";
 
 const transporter = createTransport({
@@ -35,11 +36,11 @@ export function sendContactFormularEmail(props: ContactMailProps) {
 }
 
 export function sendWelcomeEmail(toEmail: string) {
-  const email = render(<WelcomeEmail />);
+  const email = render(<WelcomeMail />);
   return transporter.sendMail({
     to: toEmail,
-    from: `Tim from A/BBY <tim@tryabby.com>`,
-    subject: `👋 Welcome to A/BBY!`,
+    from: "Tim from A/BBY <tim@tryabby.com>",
+    subject: "👋 Welcome to A/BBY!",
     html: email,
   });
 }

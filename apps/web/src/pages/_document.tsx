@@ -18,7 +18,7 @@ export default function Document() {
           data-domain="tryabby.com"
           src="https://plausible.io/js/script.js"
           strategy="afterInteractive"
-        ></Script>
+        />
       </Head>
       <body>
         <Main />

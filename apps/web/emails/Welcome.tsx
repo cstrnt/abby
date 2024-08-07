@@ -4,9 +4,7 @@ import { Html } from "@react-email/html";
 import { Preview } from "@react-email/preview";
 import { Section } from "@react-email/section";
 
-export type Props = {};
-
-export default function Welcome({}: Props) {
+export default function Welcome() {
   return (
     <Html>
       <Head />

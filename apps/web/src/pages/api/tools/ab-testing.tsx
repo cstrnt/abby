@@ -1,7 +1,7 @@
 import { OpenAI } from "openai";
-import { NextApiRequest, NextApiResponse } from "next";
+import type { NextApiRequest, NextApiResponse } from "next";
 import { z } from "zod";
-import { createHash } from "crypto";
+import { createHash } from "node:crypto";
 import { redis } from "server/db/redis";
 import { ABGeneratorTarget, MAX_TRIES } from "pages/a-b-testing-generator";
 
@@ -116,9 +116,8 @@ export default async function abTestingGenerator(
       } catch (error) {
         console.error(error);
         res.status(500).json({ error: "Could not generate response" });
-      } finally {
-        break;
       }
+      return;
     }
     default: {
       res.status(405).end();
