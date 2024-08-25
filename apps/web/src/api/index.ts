@@ -4,6 +4,7 @@ import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { logger } from "hono/logger";
 import { makeHealthRoute } from "./routes/health";
+import { makeIntegrationsRoute } from "./routes/integrations";
 import { makeLegacyProjectDataRoute } from "./routes/legacy_project_data";
 import { flagAiRoute } from "./routes/ee/v1_flag_ai";
 import { makeEventRoute } from "./routes/v1_event";
@@ -21,5 +22,6 @@ export const app = new Hono()
   .route("/v1/config", makeConfigRoute())
   .route("/v1/data", makeProjectDataRoute())
   .route("/v1/track", makeEventRoute())
+  .route("/integrations", makeIntegrationsRoute())
   // Enterprise routes
   .route("/ee/v1/abby-ai", flagAiRoute);
