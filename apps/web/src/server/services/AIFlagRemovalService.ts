@@ -4,15 +4,6 @@ export class AIFlagRemovalService {
   constructor(private openai: OpenAI) {}
 
   async removeFlagFromCode(code: string, flagName: string) {
-    const flagRegex = new RegExp(
-      `useFeatureFlag\\s*\\(\\s*['"\`]${flagName}['"\`]\\s*\\)`
-    );
-
-    // check if the code even exists, prevent openai calls
-    if (!flagRegex.test(code)) {
-      return code;
-    }
-
     const response = await this.openai.chat.completions.create({
       model: "gpt-4o-mini",
       messages: [

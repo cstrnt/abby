@@ -1,6 +1,6 @@
 import { Hono } from "hono";
 import OpenAI from "openai";
-import { AIFlagRemovalService } from "server/services/AIFlagRemovalService";
+import { AIFlagRemovalService } from "server/services/AiFlagRemovalService";
 import { apiKeyMiddleware } from "../v1_config";
 import { zValidator } from "@hono/zod-validator";
 import { z } from "zod";
