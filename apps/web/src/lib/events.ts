@@ -1,5 +1,4 @@
 import dayjs from "dayjs";
-
 export enum TIME_INTERVAL {
   DAY = "day",
   ALL_TIME = "all",
@@ -67,10 +66,19 @@ export function getBaseEventsByInterval(
 ) {
   const variantData = variants.reduce(
     (acc, variant) => {
-      acc[variant] = 0;
+      acc[variant] = {
+        totalEventCount: 0,
+        uniqueEventCount: 0,
+      };
       return acc;
     },
-    {} as Record<string, number>
+    {} as Record<
+      string,
+      {
+        totalEventCount: number;
+        uniqueEventCount: number;
+      }
+    >
   );
   switch (interval) {
     case TIME_INTERVAL.DAY: {
