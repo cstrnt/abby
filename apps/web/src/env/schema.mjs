@@ -56,8 +56,6 @@ export const clientSchema = z.object({
   NEXT_PUBLIC_STRIPE_PRO_PLAN_PRICE_ID: z.string().min(1),
   NEXT_PUBLIC_ABBY_PROJECT_ID: z.string().min(1),
   NEXT_PUBLIC_PLAUSIBLE_DOMAIN: z.string().optional(),
-  NEXT_PUBLIC_POSTHOG_KEY: z.string().optional(),
-  NEXT_PUBLIC_POSTHOG_HOST: z.string().optional(),
 });
 
 /**
@@ -79,6 +77,4 @@ export const clientEnv = {
   ),
   NEXT_PUBLIC_ABBY_PROJECT_ID: process.env.NEXT_PUBLIC_ABBY_PROJECT_ID,
   NEXT_PUBLIC_PLAUSIBLE_DOMAIN: process.env.NEXT_PUBLIC_PLAUSIBLE_DOMAIN,
-  NEXT_PUBLIC_POSTHOG_KEY: process.env.NEXT_PUBLIC_POSTHOG_KEY,
-  NEXT_PUBLIC_POSTHOG_HOST: process.env.NEXT_PUBLIC_POSTHOG_HOST,
 };
