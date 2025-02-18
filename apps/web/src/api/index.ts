@@ -7,6 +7,7 @@ import { makeIntegrationsRoute } from "./routes/integrations";
 import { makeLegacyProjectDataRoute } from "./routes/legacy_project_data";
 import { flagAiRoute } from "./routes/ee/v1_flag_ai";
 import { makeEventRoute } from "./routes/v1_event";
+import { makeV2ProjectDataRoute } from "./routes/v2_project_data";
 
 export const app = new Hono()
   .basePath("/api")
@@ -23,4 +24,6 @@ export const app = new Hono()
   .route("/v1/track", makeEventRoute())
   .route("/integrations", makeIntegrationsRoute())
   // Enterprise routes
-  .route("/ee/v1/abby-ai", flagAiRoute);
+  .route("/ee/v1/abby-ai", flagAiRoute)
+  // v2 routes
+  .route("/v2/data", makeV2ProjectDataRoute());

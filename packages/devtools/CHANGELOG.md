@@ -1,5 +1,17 @@
 # @tryabby/devtools
 
+## 8.0.1
+
+### Patch Changes
+
+- fix build
+
+## 8.0.0
+
+### Major Changes
+
+- add rules and user segments
+
 ## 7.0.0
 
 ### Major Changes

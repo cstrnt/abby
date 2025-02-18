@@ -1,5 +1,24 @@
 # @tryabby/node
 
+## 7.0.1
+
+### Patch Changes
+
+- fix build
+- Updated dependencies
+  - @tryabby/core@7.0.1
+
+## 7.0.0
+
+### Major Changes
+
+- add rules and user segments
+
+### Patch Changes
+
+- Updated dependencies
+  - @tryabby/core@7.0.0
+
 ## 6.0.0
 
 ### Major Changes
