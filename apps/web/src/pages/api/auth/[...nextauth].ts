@@ -10,6 +10,8 @@ import { prisma } from "../../../server/db/client";
 import { ProjectService } from "../../../server/services/ProjectService";
 import { sendWelcomeEmail } from "../../../../emails";
 
+import type { NextApiRequest, NextApiResponse } from "next";
+
 export const authOptions: NextAuthOptions = {
   pages: {
     signIn: "/login",
@@ -121,4 +123,15 @@ export const authOptions: NextAuthOptions = {
   ],
 };
 
-export default NextAuth(authOptions);
+export default (req: NextApiRequest, res: NextApiResponse) => {
+  if (
+    req.url &&
+    new URL(req.url, "https://tryabby.com").pathname ===
+      "/api/auth/callback/email" &&
+    req.method !== "GET"
+  ) {
+    console.log("Suspicous request to /api/auth/callback/email", req.method);
+    return res.status(200).end();
+  }
+  return NextAuth(authOptions)(req, res);
+};
